@@ -11,9 +11,25 @@ When an unit goes over this cell the vector will influence the final velocity of
 * you need to constantly change the positions of units
 * the enviorment is dynamic
 
-# Calculating the flow Field
+# Calculating the flow field
 there are 3 steps in calculating a flow field
 * Create a cost field
 * Generate tan integration field
 * generate the flow field
 
+## The cost field
+![image](https://user-images.githubusercontent.com/78808866/148693004-ef6b1912-2a29-4973-8b20-969103f63f9f.png)
+Each cell int the cost field represents a value.
+The units will go to the cells with the lower values.
+if the value is realy high than the units can't walk on that cell.
+Like in this image where grey isground (value of 1), brown is mud (value of 3) and blue is water (a really high value).
+
+## The integration field
+The integration field is where most of the work in the flow field calculation is done.
+In order to create the integration field I used a modified version of Dijkstra’s algorithm.
+* will add steps later!!!!!!!
+
+## The flow field
+flow field takes the result of the integration field’s calculations and uses it to determine the direction of the vectors in the field.
+It does this by going true all the cells and comparing the cell's value to that of its neighbors to find the lowest value.
+than we store a vector withe the index that points to the lowest neighbor in that cell.
