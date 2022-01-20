@@ -37,13 +37,13 @@ public class GridController : MonoBehaviour
             // drawGrid
             DrawGrid(m_GridSize, new Color(0f, 1f, 0f), m_CellRadius);
 
-            // display cost
-            foreach (Cell curCell in m_CurFlowField.m_Grid)
-            {
-                // using the unity editor class
-                GUIStyle style = new GUIStyle(GUI.skin.label);
-                Handles.Label(curCell.m_WorldPos, curCell.m_Cost.ToString(), style);
-            }
+            //// display cost
+            //foreach (Cell curCell in m_CurFlowField.m_Grid)
+            //{
+            //    // using the unity editor class
+            //    GUIStyle style = new GUIStyle(GUI.skin.label);
+            //    Handles.Label(curCell.m_WorldPos, curCell.m_Cost.ToString(), style);
+            //}
         }
     }
 

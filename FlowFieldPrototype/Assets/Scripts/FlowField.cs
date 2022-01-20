@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlowField : MonoBehaviour
+public class FlowField
 {
     public Cell[,] m_Grid { get; private set; }
     public float m_CellRadius { get; private set; }
@@ -34,27 +34,27 @@ public class FlowField : MonoBehaviour
 
     public void CreateCostField()
     {
-        //Vector3 cellHalfExtents = Vector3.one * m_CellRadius;
-        //int terrainMask = LayerMask.GetMask("Impassible", "RoughTerrain");
-        //// going true every cell and if the cell overlaps with a mud ore water block give it the right cost
-        //foreach (Cell curCell in m_Grid)
-        //{
-        //    Collider[] obstacles = Physics.OverlapBox(curCell.m_WorldPos, cellHalfExtents, Quaternion.identity, terrainMask);
-        //    bool hasIncreasedCost = false;
-        //    foreach (Collider col in obstacles)
-        //    {
-        //        if (col.gameObject.layer == 8) // water
-        //        {
-        //            curCell.IncreaseCost(255);
-        //            continue;
-        //        }
-        //        else if (!hasIncreasedCost && col.gameObject.layer == 9) // mud
-        //        {
-        //            curCell.IncreaseCost(3);
-        //            hasIncreasedCost = true;
-        //        }
-        //    }
-        //}
+        Vector3 cellHalfExtents = Vector3.one * m_CellRadius;
+        int terrainMask = LayerMask.GetMask("Impassible", "RoughTerrain");
+        // going true every cell and if the cell overlaps with a mud ore water block give it the right cost
+        foreach (Cell curCell in m_Grid)
+        {
+            Collider[] obstacles = Physics.OverlapBox(curCell.m_WorldPos, cellHalfExtents, Quaternion.identity, terrainMask);
+            bool hasIncreasedCost = false;
+            foreach (Collider col in obstacles)
+            {
+                if (col.gameObject.layer == 8) // water
+                {
+                    curCell.IncreaseCost(255);
+                    continue;
+                }
+                else if (!hasIncreasedCost && col.gameObject.layer == 9) // mud
+                {
+                    curCell.IncreaseCost(3);
+                    hasIncreasedCost = true;
+                }
+            }
+        }
 
     }
 }
