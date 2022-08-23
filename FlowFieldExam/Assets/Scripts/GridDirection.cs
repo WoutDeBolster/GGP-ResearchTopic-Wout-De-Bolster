@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class GridDirection
 {
-    public readonly Vector2Int Vector;
+    public readonly Vector2Int m_Vector;
  
     private GridDirection(int x, int y)
     {
-        Vector = new Vector2Int(x, y);
+        m_Vector = new Vector2Int(x, y);
     }
  
     public static implicit operator Vector2Int(GridDirection direction)
     {
-        return direction.Vector;
+        return direction.m_Vector;
     }
  
     public static GridDirection GetDirectionFromV2I(Vector2Int vector)

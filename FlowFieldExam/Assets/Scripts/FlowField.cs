@@ -86,6 +86,26 @@ public class FlowField
         }
     }
 
+    // going true 
+    public void CreateFlowField()
+    {
+        foreach(Cell curCell in m_Grid)
+        {
+            List<Cell> curNeighbors = GetNeighborCells(curCell.m_GridIdx, GridDirection.AllDirections);
+ 
+            int bestCost = curCell.m_BestCost;
+ 
+            foreach(Cell curNeighbor in curNeighbors)
+            {
+                if(curNeighbor.m_BestCost < bestCost)
+                {
+                    bestCost = curNeighbor.m_BestCost;
+                    curCell.m_BestDirection = GridDirection.GetDirectionFromV2I(curNeighbor.m_GridIdx - curCell.m_GridIdx);
+                }
+            }
+        }
+    }
+
     private List<Cell> GetNeighborCells(Vector2Int nodeIndex, List<GridDirection> directions)
     {
         List<Cell> neighborCells = new List<Cell>();

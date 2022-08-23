@@ -6,6 +6,7 @@ public class Cell
     public Vector2Int m_GridIdx;
     public byte m_Cost;
     public ushort m_BestCost;
+    public GridDirection m_BestDirection;
 
     public Cell(Vector3 wordlPos, Vector2Int gridIdx)
     {
@@ -13,6 +14,7 @@ public class Cell
         m_GridIdx = gridIdx;
         m_Cost = 1;
         m_BestCost = ushort.MaxValue;
+        m_BestDirection = GridDirection.None;
     }
 
     public void IncreaseCost(int amount)
