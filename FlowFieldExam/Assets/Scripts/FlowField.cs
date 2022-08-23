@@ -7,6 +7,7 @@ public class FlowField
     public Cell[,] m_Grid { get; private set; }
     public float m_CellRadius { get; private set; }
     public Vector2Int m_GridSize { get; private set; }
+    public Cell m_DestinationCell;
 
     private float m_CellDiameter;
 
@@ -56,5 +57,72 @@ public class FlowField
             }
         }
 
+    }
+
+    public void CreateIntegrationField(Cell _destinationCell)
+    {
+        m_DestinationCell = _destinationCell;
+ 
+        m_DestinationCell.m_Cost = 0;
+        m_DestinationCell.m_BestCost = 0;
+ 
+        Queue<Cell> cellsToCheck = new Queue<Cell>();
+ 
+        cellsToCheck.Enqueue(m_DestinationCell);
+ 
+        while(cellsToCheck.Count > 0)
+        {
+            Cell curCell = cellsToCheck.Dequeue();
+            List<Cell> curNeighbors = GetNeighborCells(curCell.m_GridIdx, GridDirection.CardinalDirections);
+            foreach (Cell curNeighbor in curNeighbors)
+            {
+                if (curNeighbor.m_Cost == byte.MaxValue) { continue; } // impasible cell check
+                if (curNeighbor.m_Cost + curCell.m_BestCost < curNeighbor.m_BestCost) // checking the neiboring cells witch one is the best
+                {
+                    curNeighbor.m_BestCost = (ushort)(curNeighbor.m_Cost + curCell.m_BestCost); // add the best cost of the 
+                    cellsToCheck.Enqueue(curNeighbor);
+                }
+            }
+        }
+    }
+
+    private List<Cell> GetNeighborCells(Vector2Int nodeIndex, List<GridDirection> directions)
+    {
+        List<Cell> neighborCells = new List<Cell>();
+ 
+        foreach (Vector2Int curDirection in directions)
+        {
+            Cell newNeighbor = GetCellAtRelativePos(nodeIndex, curDirection);
+            if (newNeighbor != null)
+            {
+                neighborCells.Add(newNeighbor);
+            }
+        }
+        return neighborCells;
+    }
+
+    private Cell GetCellAtRelativePos(Vector2Int orignPos, Vector2Int relativePos)
+    {
+        Vector2Int finalPos = orignPos + relativePos;
+ 
+        if (finalPos.x < 0 || finalPos.x >= m_GridSize.x || finalPos.y < 0 || finalPos.y >= m_GridSize.y)
+        {
+            return null;
+        }
+ 
+        else { return m_Grid[finalPos.x, finalPos.y]; }
+    }
+
+    public Cell GetCellFromWorldPos(Vector3 worldPos)
+    {
+        float percentX = worldPos.x / (m_GridSize.x * m_CellDiameter);
+        float percentY = worldPos.z / (m_GridSize.y * m_CellDiameter);
+ 
+        percentX = Mathf.Clamp01(percentX);
+        percentY = Mathf.Clamp01(percentY);
+ 
+        int x = Mathf.Clamp(Mathf.FloorToInt((m_GridSize.x) * percentX), 0, m_GridSize.x - 1);
+        int y = Mathf.Clamp(Mathf.FloorToInt((m_GridSize.y) * percentY), 0, m_GridSize.y - 1);
+        return m_Grid[x, y];
     }
 }

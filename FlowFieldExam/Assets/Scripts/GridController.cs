@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+public enum FlowFieldDisplayType 
+{ 
+    None, 
+    AllIcons, 
+    DestinationIcon, 
+    CostField, 
+    IntegrationField
+};
+
 public class GridController : MonoBehaviour
 {
     public Vector2Int m_GridSize;
@@ -10,6 +19,7 @@ public class GridController : MonoBehaviour
     public FlowField m_CurFlowField;
 
     private bool m_IsStarted = false;
+    public FlowFieldDisplayType m_CurDisplayType;
 
     private void InitFlowField()
     {
@@ -26,24 +36,52 @@ public class GridController : MonoBehaviour
 
             m_CurFlowField.CreateCostField();
 
+            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+            Cell destinationCell = m_CurFlowField.GetCellFromWorldPos(worldMousePos);
+            m_CurFlowField.CreateIntegrationField(destinationCell);
+
             m_IsStarted = true;
         }
     }
 
     private void OnDrawGizmos()
     {
+        GUIStyle style = new GUIStyle(GUI.skin.label);
+
         if (m_IsStarted)
         {
             // drawGrid
             DrawGrid(m_GridSize, new Color(0f, 1f, 0f), m_CellRadius);
 
             // display cost
-            GUIStyle style = new GUIStyle(GUI.skin.label);
             foreach (Cell curCell in m_CurFlowField.m_Grid)
             {
                // using the unity editor class
                Handles.Label(curCell.m_WorldPos, curCell.m_Cost.ToString(), style);
             }
+        }
+
+        switch (m_CurDisplayType)
+        {
+            case FlowFieldDisplayType.CostField:
+ 
+                foreach (Cell curCell in m_CurFlowField.m_Grid)
+                {
+                    Handles.Label(curCell.m_WorldPos, curCell.m_Cost.ToString(), style);
+                }
+                break;
+                
+            case FlowFieldDisplayType.IntegrationField:
+ 
+                foreach (Cell curCell in m_CurFlowField.m_Grid)
+                {
+                    Handles.Label(curCell.m_WorldPos, curCell.m_BestCost.ToString(), style);
+                }
+                break;
+                
+            default:
+                break;
         }
     }
 
