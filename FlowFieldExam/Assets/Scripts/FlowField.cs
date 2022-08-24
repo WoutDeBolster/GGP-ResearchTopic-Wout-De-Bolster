@@ -66,10 +66,12 @@ public class FlowField
         m_DestinationCell.m_Cost = 0;
         m_DestinationCell.m_BestCost = 0;
  
+        // i do this with a queue of how it stores the elements and how you can dequeue it
+        // more info: https://www.softwaretestinghelp.com/queue-in-cpp/
         Queue<Cell> cellsToCheck = new Queue<Cell>();
  
-        cellsToCheck.Enqueue(m_DestinationCell);
- 
+        cellsToCheck.Enqueue(m_DestinationCell); // filling up the q
+    
         while(cellsToCheck.Count > 0)
         {
             Cell curCell = cellsToCheck.Dequeue();
@@ -86,7 +88,6 @@ public class FlowField
         }
     }
 
-    // going true 
     public void CreateFlowField()
     {
         foreach(Cell curCell in m_Grid)
@@ -95,6 +96,7 @@ public class FlowField
  
             int bestCost = curCell.m_BestCost;
  
+            // getting the vector of the current cell to the bestCost NeighborCell
             foreach(Cell curNeighbor in curNeighbors)
             {
                 if(curNeighbor.m_BestCost < bestCost)
@@ -125,6 +127,7 @@ public class FlowField
     {
         Vector2Int finalPos = orignPos + relativePos;
  
+        // to see if it is in the grid
         if (finalPos.x < 0 || finalPos.x >= m_GridSize.x || finalPos.y < 0 || finalPos.y >= m_GridSize.y)
         {
             return null;
@@ -135,6 +138,7 @@ public class FlowField
 
     public Cell GetCellFromWorldPos(Vector3 worldPos)
     {
+        // transroming it to gridspace
         float percentX = worldPos.x / (m_GridSize.x * m_CellDiameter);
         float percentY = worldPos.z / (m_GridSize.y * m_CellDiameter);
  
